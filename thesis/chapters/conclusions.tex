@@ -1,0 +1,75 @@
+\chapter{Conclusioni}
+In quest'ultimo capitolo si traggono le conclusioni sui risultati delle analisi svolte e
+sui possibili sviluppi futuri di questo lavoro.
+
+\label{chap:chap6}
+\section{Risultati ottenuti}
+Si è arrivati a realizzare un sistema di controllo avanzato che permette di 
+ottimizzare l'attività del \textit{path tracking} attraverso l'implementazione
+in \textit{Python} dell'algoritmo \textit{Model Predictive Control}.
+Si è dunque in grado di seguire la linea di riferimento, ovvero la raceline generata dal \textit{planner}, con una 
+traiettoria ottimale calcolata in tempo reale lungo l'intero percorso. Ciò permette di 
+minimizzare la deviazione dalla linea di riferimento, che è stata misurata mediante il 
+\textit{Crosstrack Error} e, inoltre, nelle diverse configurazioni si è osservata spesso una
+riduzione dei tempi di percorrenza sul giro.
+
+Sulla base dei risultati presentati nel Capitolo~\ref{chap:chap5}, le diverse configurazioni di
+\textit{MPC} risultano superiori a un metodo di controllo geometrico come il 
+\textit{Pure Pursuit}, appartenente alla categoria dei metodi reattivi per il controllo di veicoli. 
+Si tratta di un risultato previsto, che risulta coerente con la formulazione di \textit{MPC}, 
+ovvero come un problema di ottimizzazione con vincoli che è caratterizzato da una struttura 
+non banale che guarda al \textit{``futuro''}. 
+
+D'altro canto, il \textit{Pure Pursuit} è un metodo di \textit{path tracking geometrico}, poiché 
+calcola l'angolo di sterzata da applicare alle ruote per raggiungere il waypoint successivo nella linea di riferimento. 
+Questo metodo, a differenza di \textit{MPC}, presenta un andamento più irregolare; infatti, 
+porta a seguire una traiettoria che, osservando i risultati del \textit{Crosstrack Error},
+si discosta di molto dalla linea teorica, con valori medi superiori tra il 140\% e il 153\%
+rispetto al profilo \textit{High Performance MPC}.
+Si è anche rilevato che \textit{Pure Pursuit} consuma molta più energia di ogni metodo di 
+\textit{MPC}. Inoltre, come qualsiasi altro metodo di controllo reattivo, esso non considera in
+alcun modo la dinamica del sistema, pertanto può produrre archi impraticabili; contrariamente, 
+\textit{MPC} incorpora un modello della dinamica, come il \textit{Kinematic Bicycle Model}, discusso nella sezione~\ref{subs:kinmodel}.
+
+Infine, dalle diverse configurazioni di \textit{MPC} emergono risultati differenti tra loro:
+la configurazione \textit{High Performance} risulta essere la migliore in un contesto di
+guida autonoma con un singolo agente che corre a velocità estreme, prossime ai limiti fisici del 
+veicolo. Nello specifico, per questo profilo si ottiene che, per entrambi i circuiti, si
+hanno dei \textit{lap time} e degli \textit{RMSE} inferiori, con un buon compromesso per
+ciò che riguarda il \textit{consumo energetico}, il quale risulta però minore per i metodi 
+\textit{Safe} e \textit{Fast}. Ciò non è casuale, infatti \textit{High Performance} presenta 
+prestazioni superiori anche in termini di velocità su entrambe le piste testate. Invece, per 
+quanto riguarda l'angolo di sterzata applicato, non si rilevano particolari miglioramenti per i profili di \textit{MPC}.
+
+\section{Sviluppi futuri}
+Gli sviluppi futuri per questo progetto possono muoversi verso nuove prospettive,
+sia per poterlo applicare per attività più complesse, sia per migliorare la soluzione
+di \textit{MPC} realizzata.
+
+\paragraph{Sim2Real} La prima evoluzione consiste nel passaggio dalla simulazione alla realtà. 
+Ciò implicherebbe sfide non banali, come l'adattamento di diversi valori di configurazione e di 
+certe strategie decisionali a livello implementativo, oltre alla costruzione del veicolo.
+In un ambiente reale vi è incertezza: il modello utilizzato nella simulazione è solo 
+un'approssimazione e, in più, l'attuazione su un veicolo reale non è più solo prodotta da un software, ma è in larga parte meccanica.
+Sarà dunque cruciale effettuare un'attenta attività di \textit{tuning} per ottimizzare le prestazioni.
+\paragraph{Modelli più complessi} Si possono adottare modelli più aderenti alla realtà, 
+come il \textit{Dynamic Bicycle Model}, che considerano dinamiche non lineari e fenomeni
+aerodinamici tipici nell'\textit{autonomous racing} a velocità elevate. 
+I modelli non lineari, infatti, potrebbero migliorare la precisione del controllo, al costo 
+però di tempi di risoluzione più lunghi e di possibili valori inferiori per la velocità.
+Si avrebbe così un problema non convesso, che andrebbe risolto con un risolutore non lineare come \textit{Casadi}.
+\paragraph{Competizione multi-agente} Un'altra direzione di ricerca potrebbe
+essere data da un contesto di competizione con due (o più) veicoli. 
+Questo tipo di lavoro richiederebbe nuove strategie per gestire il comportamento competitivo,
+legate alla \textit{teoria dei giochi}. Ciò implicherebbe, ad esempio, lo sviluppo di tecniche 
+per ottimizzare i sorpassi, la difesa della traiettoria e la gestione delle collisioni.
+\paragraph{Reti Neurali e MPC Data-Driven} Si potrebbero integrare anche delle reti neurali \cite{TATULEACODREAN20206031, fuchs2021super} per
+migliorare ulteriormente il processo di \textit{path tracking}. 
+Nello specifico, si potrebbero utilizzare tecniche di \textit{Imitation Learning (IL)} e 
+\textit{Reinforcement Learning (RL)} al fine di apprendere comportamenti ottimali dai dati registrati nei giri precedenti.
+I lavori più recenti sui controller nell'\textit{autonomous racing} si sono concentrati
+proprio sullo sviluppo di componenti interni basati sull'apprendimento, come soluzioni di 
+\textit{Learning MPC} \cite{xue2024learning, rosolia2019learning} che applicano proprio queste idee.
+In particolare, si potrebbe esplorare un approccio ibrido in cui il \textit{controller}
+sfrutta tecniche basate su modelli classici e le combina coi dati raccolti da
+esperienze passate per aggiornare e migliorare le prestazioni del sistema in tempo reale.

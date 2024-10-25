@@ -1,0 +1,78 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[margin=2.5cm]{geometry}
+%\usepackage[a4paper,top=2cm,bottom=2cm,left=3cm,right=3cm]{geometry}
+%\usepackage[a4paper,top=2cm,bottom=2cm,left=3cm,right=3cm]{geometry}
+\usepackage[italian]{babel}			% Supporto per l'italiano
+\usepackage[a-1b]{pdfx}			    % File conforme allo standard PDF-A (obbligatorio per la consegna)
+%\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+%\usepackage{parskip}			    
+\title{\textbf{Ottimizzazione del Path Tracking con Model Predictive Control per Autonomous Racing in F1TENTH}}
+\author{\Large Vincenzo Siano, matricola 981734}
+
+\begin{document}
+\date{}
+\maketitle
+Il settore della guida autonoma ha registrato notevoli progressi negli 
+ultimi anni, favorito dall'innovazione portata in quest'ambito dalla robotica e dall'intelligenza artificiale. Il path tracking rappresenta una delle sfide principali per questi veicoli, specialmente in contesti competitivi
+come l'Autonomous Racing, nel quale la precisione e le performance sono cruciali. 
+La comunità di F1TENTH offre una piattaforma che permette di testare i 
+propri algoritmi su veicoli autonomi in scala 1:10, simulando corse reali in un ambiente controllato e adatto a valutare le prestazioni delle soluzioni sviluppate.
+
+\medskip
+\noindent Questa tesi si propone di sviluppare e di analizzare un sistema di controllo ottimizzato per l'attività 
+di path tracking con un singolo agente, applicata al campo dell'Autonomous Racing per la piattaforma 
+F1TENTH, mediante l'implementazione di un algoritmo di controllo ottimale e predittivo, il Model Predictive Control (MPC).
+Inoltre, tale sistema è stato confrontato con Pure Pursuit, un altro metodo di controllo più semplice 
+a livello concettuale. Nello specifico, gli obiettivi del lavoro comprendono:
+\begin{enumerate}
+    \item lo sviluppo di un sistema funzionante di guida autonoma di un veicolo simulato della categoria F1TENTH;
+    \item l'ottimizzazione della traiettoria calcolata, riducendo il più possibile l'errore di 
+    tracking, ovvero la deviazione rispetto alla linea teorica di riferimento;
+    \item l'applicabilità in circuiti di Formula 1 in scala ridotta a 1:10;
+    \item l'analisi dei risultati e il confronto delle prestazioni col Pure Pursuit e tra le diverse configurazioni di MPC. 
+\end{enumerate}
+Pertanto, lo scopo ultimo è comprendere se Model Predictive Control rappresenta una soluzione valida e se sia superiore
+a un metodo di controllo reattivo più semplice, siccome effettua calcoli puramente geometrici per
+seguire una traiettoria calcolata da un planner.
+
+\section{Descrizione del lavoro}
+In primo luogo, è stato effettuato uno studio preliminare della piattaforma F1TENTH e dei concetti 
+fondamentali della guida autonoma, ponendo particolare attenzione al controllo del veicolo in 
+contesti di corse con un singolo agente.
+Si è poi proseguito con lo studio di Model Predictive Control, organizzando i parametri necessari per la configurazione dell'algoritmo in file appositi.
+Successivamente è stato implementato l'algoritmo, prima attraverso l'impostazione del problema di ottimizzazione convessa, secondo un risolutore adeguato; poi, attraverso la definizione della funzione obiettivo e dei vincoli, è stato ottimizzato il controllo del veicolo lungo la traiettoria di riferimento. 
+
+\medskip
+\noindent 
+Alla scrittura del codice è seguita una fase di ottimizzazione (tuning) delle matrici di 
+pesi presenti nella funzione obiettivo di MPC, volta a migliorare la precisione nel path tracking 
+senza però compromettere la stabilità e la velocità del veicolo. \\
+I test sono stati condotti su due circuiti di Formula 1, Spa-Francorchamps e Monza, mediante l'uso del simulatore di F1TENTH. Da questa fase, sono emersi tre profili di guida, ciascuno ottimizzato per scenari differenti.
+Durante le simulazioni, sono stati raccolti i dati relativi alla posizione, all'angolo di sterzata, alla velocità e all'accelerazione. A partire da questi dati sono state
+calcolate specifiche metriche come il Crosstrack Error, al fine di valutare le performance del sistema. 
+
+\medskip
+\noindent In ultima istanza, i risultati ottenuti sono stati analizzati attraverso dei notebook di Jupyter, all'interno dei quali sono stati effettuati confronti tra MPC e Pure Pursuit, oltre a valutare l'efficacia dei tre profili di MPC.
+\section{Tecnologie coinvolte}
+Il lavoro ha coinvolto le seguenti tecnologie:
+\begin{itemize}
+    \item ROS 2 (Robot Operating System), per la gestione dell'infrastruttura robotica;
+    \item F1TENTH Gym, per la simulazione dei circuiti e del veicolo. Tuttavia, l'effettiva visualizzazione del simulatore avviene su RViz;
+    \item Python, come linguaggio per l'implementazione degli algoritmi. Sono state adottate librerie come rclpy 
+    per l'interazione con ROS 2; CVXPY, necessaria per la risoluzione del problema di ottimizzazione convessa; Jupyter Notebook, invece, per l'analisi dei risultati.
+\end{itemize}
+
+\section{Competenze e risultati raggiunti}
+%- Quali risultati sono stati raggiunti rispetto agli obiettivi iniziali?
+%- Quali insegnamenti si possono trarre dall’esperienza effettuata?
+%- Quali i problemi incontrati? Quali risolti e quali no? Perch´e?
+L'analisi dei risultati ha confermato l'ottima funzionalità di Model Predictive Control su entrambi
+i circuiti testati, in linea con le aspettative e gli obiettivi prefissati. Grazie alla sua natura 
+predittiva, MPC fornisce traiettorie più precise, con errori di tracking significativamente inferiori 
+rispetto al Pure Pursuit. Inoltre, si osservano anche lap time inferiori per ogni profilo di MPC 
+con la configurazione ``High Performance'' che si è rivelata come la migliore, soprattutto in uno 
+scenario di gara estrema con un singolo agente, garantendo prestazioni superiori anche in termini di velocità.
+Un ulteriore aspetto positivo è emerso dall'analisi dei consumi energetici, aspetto nel quale MPC ha mostrato 
+un'efficienza superiore rispetto al Pure Pursuit, un risultato particolarmente rilevante data la 
+scala ridotta del veicolo.
+\end{document}
